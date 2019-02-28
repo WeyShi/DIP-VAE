@@ -120,15 +120,15 @@ class DIP_VAE(object):
         ## DIP-VAE part:
         if self.type == "i":
             # expectation of mu (mean of distributions)
-            exp_mu = tf.reduce_mean(self.enc_mean, axis=0)
+            exp_mu = tf.reduce_mean(self.enc_mean, axis=0)#####mean through batch
 
             # expectation of mu mu.tranpose
-            mu_expand1 = tf.expand_dims(self.enc_mean, 1)
-            mu_expand2 = tf.expand_dims(self.enc_mean, 2)
+            mu_expand1 = tf.expand_dims(self.enc_mean, 1)#####(batch_size, 1, number of mean of latent variables)
+            mu_expand2 = tf.expand_dims(self.enc_mean, 2)#####(batch_size, number of mean of latent variables, 1) ignore batch_size, only transpose the means
             exp_mu_mu_t = tf.reduce_mean( mu_expand1 * mu_expand2, axis=0)
 
             # covariance of model mean
-            cov = exp_mu_mu_t - tf.expand_dims(exp_mu, 0) * tf.expand_dims(exp_mu, 1)
+            cov = exp_mu_mu_t - tf.expand_dims(exp_mu, 0) * tf.expand_dims(exp_mu, 1)##1, mean* mean, 1
             diag_part = tf.diag_part(cov)
             off_diag_part = cov - tf.diag(diag_part)
 
